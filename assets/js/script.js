@@ -1,8 +1,3 @@
-// GIVEN a weather dashboard with form inputs
-        // Built in HTML
-// WHEN I search for a city
-// THEN I am presented with current and future conditions for that city and that city is added to the search history
-        //Use Fetch data and capture user input in the text field to search for a city, add that city to the UL
 // WHEN I view current weather conditions for that city
 // THEN I am presented with the city name, the date, an icon representation of weather conditions, the temperature, the humidity, the wind speed, and the UV index
         //Parse JSON data to pick the relavent pieces out and place them on the page
@@ -18,22 +13,33 @@
 // 7ff4f4e0e52e504f768e877c74b9eab4 - API KEY
 
 // city.name - city
-// 
+//
+var date = moment().format("MM/D/YYYY")
 var searchFieldEl = document.querySelector("#searchField");
 var searchBtn = document.querySelector("#searchBtn");
 var listCont = document.querySelector("#prevSearch");
+var cityName = document.querySelector("#cityName");
+var curTemp = document.querySelector("#curTemp")
 
 var fetchWeather = function(city) {
     if(city === "") {
         alert("Please enter a city!")
         return;
     }
-    fetch("https://api.openweathermap.org/data/2.5/forecast?q=" + city + "&appid=7ff4f4e0e52e504f768e877c74b9eab4").then( function(response) {
+    fetch("https://api.openweathermap.org/data/2.5/weather?q=" + city + "&appid=7ff4f4e0e52e504f768e877c74b9eab4").then( function(response) {
         response.json().then(function (data) {
-            console.log(data)
+            showCurWeather(data)
         })
     })
 };
+
+var showCurWeather = function (data) { 
+    var actTemp = data.main.temp
+    var tempSplit = actTemp.split(".")[1]
+    cityName.textContent = data.name + " " + date + " " + data.weather[0].icon 
+    
+    curTemp.textContent = "Temperature: " + tempSplit
+}
 
 var gatherCity = function() {
     var citySelection = searchField.value.trim();
@@ -51,7 +57,6 @@ var buildList = function(city) {
     var cityText = document.createElement("p");
 
     cityText.textContent = searchTerm
-    listItem.classList.add("card-body");
     addCard.classList.add("card");
 
     listItem.appendChild(cityText);
