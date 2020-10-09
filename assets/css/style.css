@@ -25,3 +25,11 @@ li {
 .listBox {
     padding: 0;
 }
+
+.bg-orange {
+    background: orange;
+}
+
+.bg-purple {
+    background: orchid;
+}
