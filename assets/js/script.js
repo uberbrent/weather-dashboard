@@ -42,7 +42,7 @@ var getFiveDay = function () {
                 futureForcast(data)
             })
         })
-}
+};
 
 var showCurWeather = function (data) {
 
@@ -69,7 +69,7 @@ var showCurWeather = function (data) {
     var theImg = document.createElement("img")
     cityName.appendChild(theImg)
     theImg.setAttribute("src", "http://openweathermap.org/img/w/" + data.weather[0].icon + ".png");
-}
+};
 
 var uvIndexTracker = function (data) {
     var uvString = data.daily[0].uvi
@@ -131,13 +131,14 @@ var futureForcast = function (data) {
         tempP.textContent = "Temp: " + data.daily[i].temp.day + "° F"
         humidityP.textContent = "Humidity: " + data.daily[i].humidity + "%"
     }
-}
+};
 
-var clickHandler = function () {
-    if (searchBtn) {
+var clickHandler = function (event) {
+    var targetEl = event.target
+    if (targetEl.matches("#searchBtn")) {
         var citySelection = searchFieldEl.value.trim();
         gatherCity(citySelection)
-    } else if (listCont) {
+    } else if (targetEl.matches("#prevSearch")) {
         var citySelection = prevSearch.value.trim();
         gatherCity(citySelection)
     }
@@ -185,7 +186,7 @@ var getLocal = function () {
     for (i = 0; i < history.length; i++) {
         buildList(history[i])
     }
-}
+};
 
 searchBtn.addEventListener("click", clickHandler)
 listCont.addEventListener("click", clickHandler)
