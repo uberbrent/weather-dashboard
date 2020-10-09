@@ -13,7 +13,7 @@ var searchBtn = document.querySelector("#searchBtn");
 var listCont = document.querySelector("#prevSearch");
 var cityName = document.querySelector("#cityName");
 var curTemp = document.querySelector("#curTemp");
-//var futureForCont = document.querySelector("#5dayFor");
+var futureForEl = document.querySelector("#fiveDayFor");
 var lat = ""
 var lon = ""
 
@@ -38,6 +38,7 @@ var getFiveDay = function () {
             response.json().then(function (data) {
                 console.log(data)
                 uvIndexTracker(data)
+                futureForcast(data)
             })
         })
 }
@@ -46,20 +47,23 @@ var showCurWeather = function (data) {
     var tempCont = document.createElement("div")
     tempCont.classList.add("container", "border", "currentTemp")
     var cityName = document.createElement("h2")
+    var imgCont = document.createElement("img")
     var temp = document.createElement("p")
     var humidity = document.createElement("p")
     var windSpeed = document.createElement("p")
 
+    imgCont.setAttribute("src", "http://openweathermap.org/img/w/" + data.weather[0].icon + ".png");
+    
     curTemp.appendChild(tempCont)
     tempCont.appendChild(cityName)
+    cityName.appendChild(imgCont)
     tempCont.appendChild(temp)
     tempCont.appendChild(humidity)
     tempCont.appendChild(windSpeed)
-
-    var imgIcon = $("<img>").attr("src", "http://openweathermap.org/img/w/" + data.weather[0].icon + ".png");
-    console.log(imgIcon)
-
-    cityName.textContent = data.name + " (" + date + ") " + imgIcon
+    
+    
+    
+    cityName.textContent = data.name + " (" + date + ") "
     temp.textContent = "Temperature: " + data.main.temp + "° F"
     humidity.textContent = "Humidity: " + data.main.humidity + "%"
     windSpeed.textContent = "Wind Speed: " + data.wind.speed + " MPH"
@@ -74,7 +78,6 @@ var uvIndexTracker = function (data) {
     uvPrint.textContent = "UV Index: "
     var uvSpan = document.createElement("span")
     uvPrint.appendChild(uvSpan)
-    console.log(uvString)
     uvSpan.textContent = " " + uvString + " "
 
     if (uvString < 3) {
@@ -91,6 +94,41 @@ var uvIndexTracker = function (data) {
 };
 
 var futureForcast = function (data) {
+    var fiveDayHeader = document.createElement("h2")
+    var cardCont = document.createElement("div")
+
+    fiveDayHeader.classList.add("row")
+    cardCont.classList.add("row", "justify-content-around")
+
+    futureForEl.appendChild(fiveDayHeader)
+    futureForEl.appendChild(cardCont)
+
+    fiveDayHeader.textContent = "5-Day Forcast:"
+
+    for(i = 1; i < 6; i++) {
+        var cardCreate = document.createElement("div")
+        var cardBody = document.createElement("div")
+        var dateP = document.createElement("p")
+        var iconImg = document.createElement("img")
+        var tempP = document.createElement("p")
+        var humidityP = document.createElement("p")
+
+        cardCreate.classList.add("card", "bg-primary", "text-white")
+        cardBody.classList.add("card-body")
+
+        cardCont.appendChild(cardCreate)
+        cardCreate.appendChild(cardBody)
+        cardBody.appendChild(dateP)
+        cardBody.appendChild(iconImg)
+        cardBody.appendChild(tempP)
+        cardBody.appendChild(humidityP)
+
+
+        dateP.textContent = moment().add([i], "d").format("MM/D/YYYY")
+        iconImg.setAttribute("src", "http://openweathermap.org/img/w/" + data.daily[i].weather[0].icon + ".png");
+        tempP.textContent = "Temp: " + data.daily[i].temp.day + "° F"
+        humidityP.textContent = "Humidity: " + data.daily[i].humidity + "%"
+    }
 
 }
 
