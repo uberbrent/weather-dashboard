@@ -188,7 +188,7 @@ var getLocal = function () {
     }
 };
 
-searchBtn.addEventListener("click", clickHandler)
+searchBtn.addEventListener("click", gatherCity)
 listCont.addEventListener("click", clickHandler)
 
 getLocal();
