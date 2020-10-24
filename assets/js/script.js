@@ -133,19 +133,21 @@ var futureForcast = function (data) {
     }
 };
 
-var clickHandler = function (event) {
-    var targetEl = event.target
-    if (targetEl.matches("#searchBtn")) {
-        var citySelection = searchFieldEl.value.trim();
-        gatherCity(citySelection)
-    } else if (targetEl.matches("#prevSearch")) {
-        var citySelection = prevSearch.value.trim();
-        gatherCity(citySelection)
+var clearScreen = function(cityName) {
+    var citySelection = cityName
+    var oldCur = document.querySelector(".currentTemp")
+    var oldHeader = document.querySelector(".futureHeader")
+    var oldFuture = document.querySelector(".futureForcast")
+    if (oldCur) {
+        oldCur.remove();
+        oldHeader.remove();
+        oldFuture.remove();
     }
-
+    fetchWeather(citySelection)
 }
 
-var gatherCity = function (citySelection) {
+var gatherCity = function () {
+    var citySelection = searchFieldEl.value.trim()
     var oldCur = document.querySelector(".currentTemp")
     var oldHeader = document.querySelector(".futureHeader")
     var oldFuture = document.querySelector(".futureForcast")
@@ -165,14 +167,15 @@ var buildList = function (city) {
     var addCard = document.createElement("div");
     var listItem = document.createElement("li");
     var cityText = document.createElement("p");
-
+    
     cityText.textContent = searchTerm
     addCard.classList.add("card", "prevSearch");
-
+    cityText.classList.add("clickEl")
+    
     listItem.appendChild(cityText);
     addCard.appendChild(listItem);
-    listCont.appendChild(addCard);
-
+    listCont.appendChild(addCard);  
+    
     searchHis.push(city)
     localStorage.setItem("searchHis", JSON.stringify(searchHis))
 };
@@ -188,7 +191,24 @@ var getLocal = function () {
     }
 };
 
-searchBtn.addEventListener("click", clickHandler)
-listCont.addEventListener("click", clickHandler)
+searchBtn.addEventListener("click", gatherCity)
+
+$("#prevSearch").on("click", "li", function() {
+    var selectText = $(this)
+        .text()
+        .trim()
+    var oldCur = document.querySelector(".currentTemp")
+    var oldHeader = document.querySelector(".futureHeader")
+    var oldFuture = document.querySelector(".futureForcast")
+    
+    if (oldCur) {
+        oldCur.remove();
+        oldHeader.remove();
+        oldFuture.remove();
+    }
+    fetchWeather(selectText)
+})
+
+
 
 getLocal();
